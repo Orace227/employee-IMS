@@ -30,6 +30,9 @@
     "redux": "^4.2.0",
     "yup": "^0.32.11"
   },
+  "engines": {
+    "node": "18" 
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
