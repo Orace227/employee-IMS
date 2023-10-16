@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
+// import index from 'index.css';
 
 // routing
 import Routes from 'routes';
@@ -11,6 +12,8 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
+// Import the Tailwind CSS styles
+import 'tailwindcss/tailwind.css'; 
 
 // ==============================|| APP ||============================== //
 

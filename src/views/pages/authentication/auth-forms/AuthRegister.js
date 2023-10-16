@@ -74,7 +74,7 @@ const FirebaseRegister = ({ ...others }) => {
 
   const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
     try {
-      const response = await axios.post('http://your-backend-api-url/register', values);
+      const response = await axios.post('http://localhost:4469/register', values);
       if (response.data.success) {
         // Registration was successful
         setStatus({ success: true });
