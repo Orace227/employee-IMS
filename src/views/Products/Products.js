@@ -1,6 +1,6 @@
-import React from 'react';
-import photo from './catagory_photo.jpg';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import photo from './catagory_photo.jpg';
 
 const productData = [
   {
@@ -53,10 +53,22 @@ const productData = [
     imageUrl: photo
   }
 ];
-
 const Products = () => {
   const { category } = useParams();
-  //   console.log(category);
+  const [addedToCart, setAddedToCart] = useState([]);
+
+  const handleAddToCart = (product) => {
+    const isProductAdded = addedToCart.includes(product);
+
+    if (isProductAdded) {
+      // If the product is already in the cart, remove it
+      setAddedToCart((prevCart) => prevCart.filter((cartProduct) => cartProduct.id !== product.id));
+    } else {
+      // If the product is not in the cart, add it
+      setAddedToCart((prevCart) => [...prevCart, product]);
+    }
+  };
+  console.log(addedToCart);
 
   // Filter the product data based on the category
   const filteredProducts = category ? productData.filter((product) => product.category === category) : productData;
@@ -77,8 +89,13 @@ const Products = () => {
                 <div className="w-full sm:w-1/2 pl-4 my-auto">
                   <h2 className="text-gray-900 text-3xl font-medium">{product.title}</h2>
                   <p className="text-gray-400 text-lg">{product.description}</p>
-                  <button className="bg-blue-500 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-600 shadow-md transform transition-transform duration-300 hover:scale-105">
-                    Add to Cart
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className={`bg-blue-500 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-600 shadow-md transform transition-transform duration-300 ${
+                      addedToCart.find((cartProduct) => cartProduct.id === product.id) ? 'scale-105' : ''
+                    }`}
+                  >
+                    {addedToCart.find((cartProduct) => cartProduct.id === product.id) ? 'Added to Cart' : 'Add to Cart'}
                   </button>
                 </div>
               </div>
