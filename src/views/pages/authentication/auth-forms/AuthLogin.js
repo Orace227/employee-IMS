@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
+// import { useNavigate } from 'react-router-dom';
+
 import {
   Box,
   Button,
@@ -34,11 +34,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import Google from 'assets/images/icons/social-google.svg';
+import axios from 'axios';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
-  
+// const navigate = useNavigate();
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -85,26 +86,23 @@ const FirebaseLogin = ({ ...others }) => {
   //     setErrors({ submit: err.message });
   //   }
   // };
+  // const handleSuccessfulLogin = () => {
+  //   // Redirect to the home page
+  //   navigate.push('/dashboard');
+  // }
+
   const handleSubmit = async (values, setErrors, setStatus, setSubmitting) => {
     try {
-      const response = await fetch('http://localhost:4469/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        })
-      });
-  
-      if (response.ok) {
+      const response = await axios.post('/login', { email: values.email, password: values.password, });
+
+      if (response.data) {
         setStatus({ success: true });
-        console.log("success");
+        console.log(response.data)
+        
       } else {
-        const data = await response.json();
+        // Handle server error
         setStatus({ success: false });
-        setErrors({ submit: data.error || 'Login failed' });
+        setErrors({ submit: 'Server error' });
       }
     } catch (err) {
       console.error(err);
@@ -115,7 +113,7 @@ const FirebaseLogin = ({ ...others }) => {
     }
   };
   
-  
+
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>

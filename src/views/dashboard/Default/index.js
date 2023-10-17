@@ -13,7 +13,6 @@ import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
-
 const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {

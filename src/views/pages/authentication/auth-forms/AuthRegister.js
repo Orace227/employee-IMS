@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
+// import { useSelector } from 'react-redux'; // Import useSelector
+
 import {
   Box,
   Button,
@@ -17,38 +19,29 @@ import {
   OutlinedInput,
   TextField,
   Typography,
+  useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+// import { useSelector } from 'react-redux'; // Import useSelector
 import axios from 'axios';
-
-
-// third party
-// import * as Yup from 'yup';
-// import { Formik } from 'formik';
-
-// project imports
-import useScriptRef from 'hooks/useScriptRef';
-import Google from 'assets/images/icons/social-google.svg';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
-
-// assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+// Define or import validDepartments
+const validDepartments = ['Department1', 'Department2'];
+import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
-// ===========================|| FIREBASE - REGISTER ||=========================== //
+// Other imports...
+import AnimateButton from 'ui-component/extended/AnimateButton';
+import Customization from 'layout/Customization';
+import { Google } from '@mui/icons-material';
 
 const FirebaseRegister = ({ ...others }) => {
   const theme = useTheme();
-  const scriptedRef = useScriptRef();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-  const customization = useSelector((state) => state.customization);
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
-
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
   const googleHandler = async () => {
     console.error('Register');
@@ -72,23 +65,24 @@ const FirebaseRegister = ({ ...others }) => {
     changePassword('123456');
   }, []);
 
-  const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-    try {
-      const response = await axios.post('http://localhost:4469/register', values);
-      if (response.data.success) {
-        // Registration was successful
-        setStatus({ success: true });
-      } else {
-        // Handle registration error
-        setErrors({ submit: 'Registration failed' });
-      }
-      setSubmitting(false);
-    } catch (error) {
-      console.error(error);
-      setErrors({ submit: error.message });
-      setSubmitting(false);
-        }
-  };
+  // const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
+  //   try {
+  //     const response = await axios.post('http://localhost:4469/register', values);
+  //     if (response.data.success) {
+  //       // Registration was successful
+  //       setStatus({ success: true });
+  //     } else {
+  //       // Handle registration error
+  //       setErrors({ submit: 'Registration failed' });
+  //     }
+  //     setSubmitting(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setErrors({ submit: error.message });
+  //     setSubmitting(false);
+  //   }
+  // };
+
 
   return (
     <>
@@ -126,7 +120,7 @@ const FirebaseRegister = ({ ...others }) => {
                 borderColor: `${theme.palette.grey[100]} !important`,
                 color: `${theme.palette.grey[900]}!important`,
                 fontWeight: 500,
-                borderRadius: `${customization.borderRadius}px`
+                borderRadius: `${Customization.borderRadius}px`
               }}
               disableRipple
               disabled
@@ -167,22 +161,24 @@ const FirebaseRegister = ({ ...others }) => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
+            const response = await axios.post('/register', values);
+            if (response.data){
+               setStatus({ success: true });
+               console.log(response.data);
+            } else {
+              // Handle registration error
+              setErrors({ submit: 'Registration failed' });
             }
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            setSubmitting(false);
+          } catch (error) {
+            console.error(error);
+            setErrors({ submit: error.message });
+            setSubmitting(false);
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit} {...others}>
+         {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
+        <form noValidate {...others}>
             <Grid container spacing={matchDownSM ? 0 : 2}>
               <Grid item xs={12}>
                 <TextField
@@ -360,7 +356,7 @@ const FirebaseRegister = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary" onClick={handleSubmit}>
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary" >
                   Sign up
                 </Button>
               </AnimateButton>

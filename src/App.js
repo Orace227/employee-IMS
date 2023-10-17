@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-
+import axios from "axios";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 // import index from 'index.css';
@@ -12,13 +12,12 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-// Import the Tailwind CSS styles
-import 'tailwindcss/tailwind.css'; 
 
 // ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
+  axios.defaults.baseURL = "http://localhost:4469";
 
   return (
     
