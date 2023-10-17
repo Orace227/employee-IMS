@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux'; // Import useSelector
-
+import { Formik, Form, ErrorMessage, Field } from 'formik';
+// import { Link } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -16,29 +14,53 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput,
   TextField,
   Typography,
   useTheme,
-  useMediaQuery,
+  useMediaQuery
 } from '@mui/material';
-// import { useSelector } from 'react-redux'; // Import useSelector
-import axios from 'axios';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-// Define or import validDepartments
-const validDepartments = ['Dept1', 'Dept2'];
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
-
-// Other imports...
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Customization from 'layout/Customization';
 import { Google } from '@mui/icons-material';
+import axios from 'axios';
 
-const FirebaseRegister = ({ ...others }) => {
+const validDepartments = ['Dept1', 'Dept2'];
+
+const validationSchema = Yup.object().shape({
+  empId: Yup.number()
+    .integer('Employee ID must be a number')
+    .positive('Employee ID must be a positive number')
+    .required('Employee ID is required'),
+  username: Yup.string().required('Username is required').trim(),
+  dept: Yup.string().required('Department is required').oneOf(validDepartments, 'Invalid department'),
+  designation: Yup.string(),
+  mNumber: Yup.string(),
+  email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+  password: Yup.string().max(255).required('Password is required'),
+  confirmPass: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .required('Confirm Password is required')
+});
+
+const initialValues = {
+  empId: '',
+  username: '',
+  dept: '',
+  designation: '',
+  mNumber: '',
+  email: '',
+  password: '',
+  confirmPass: '',
+  submit: null
+};
+
+const FirebaseRegister = () => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-  const [checked, setChecked] = useState(true);
+  // const [checked, setChecked] = useState(true);
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -65,25 +87,24 @@ const FirebaseRegister = ({ ...others }) => {
     changePassword('123456');
   }, []);
 
-  // const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-  //   try {
-  //     const response = await axios.post('/register', values);
-  //     if (response.data) {
-  //       // Registration was successful
-  //       setStatus({ success: true });
-  //       console.log("success", response.data);
-  //     } else {
-  //       // Handle registration error
-  //       setErrors({ submit: 'Registration failed' });
-  //     }
-  //     setSubmitting(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setErrors({ submit: error.message });
-  //     setSubmitting(false);
-  //   }
-  // };
-
+  const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
+    try {
+      const response = await axios.post('/register', values);
+      if (response.data) {
+        // Registration was successful
+        setStatus({ success: true });
+        console.log('success', response.data);
+      } else {
+        // Handle registration error
+        setErrors({ submit: 'Registration failed' });
+      }
+      setSubmitting(false);
+    } catch (error) {
+      console.error(error);
+      setErrors({ submit: error.message });
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -125,9 +146,7 @@ const FirebaseRegister = ({ ...others }) => {
               }}
               disableRipple
               disabled
-            >
-              
-            </Button>
+            ></Button>
             <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
           </Box>
         </Grid>
@@ -138,233 +157,104 @@ const FirebaseRegister = ({ ...others }) => {
         </Grid>
       </Grid>
 
-      <Formik
-        initialValues={{
-          empId: '',
-          username: '',
-          dept: '',
-          designation: '',
-          mNumber: '',
-          email: '',
-          password: '',
-          confirmPass: '',
-          submit: null
-        }}
-        validationSchema={Yup.object().shape({
-          empId: Yup.number().integer('Employee ID must be a number').positive('Employee ID must be a positive number').required('Employee ID is required'),
-          username: Yup.string().required('Username is required').trim(),
-          dept: Yup.string().required('Department is required').oneOf(validDepartments, 'Invalid department'),
-          designation: Yup.string(),
-          mNumber: Yup.string(),
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required'),
-          confirmPass: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match').required('Confirm Password is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            const response = await axios.post('/register', {values});
-            if (response.data) {
-              // Registration was successful
-              setStatus({ success: true });
-              console.log("success", response.data);
-            } else {
-              // Handle registration error
-              setErrors({ submit: 'Registration failed' });
-            }
-            setSubmitting(false);
-          } catch (error) {
-            console.error(error);
-            setErrors({ submit: error.message });
-            setSubmitting(false);
-          }
-        }}
-      >
-         {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-        <form noValidate {...others}>
-            <Grid container spacing={matchDownSM ? 0 : 2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Employee ID"
-                  margin="normal"
-                  name="empId"
-                  type="number"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.empId}
-                />
-                {touched.empId && errors.empId && (
-                  <FormHelperText error>{errors.empId}</FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Username"
-                  margin="normal"
-                  name="username"
-                  type="text"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.username}
-                />
-                {touched.username && errors.username && (
-                  <FormHelperText error>{errors.username}</FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Department"
-                  margin="normal"
-                  name="dept"
-                  type="text"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.dept}
-                />
-                {touched.dept && errors.dept && (
-                  <FormHelperText error>{errors.dept}</FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Designation"
-                  margin="normal"
-                  name="designation"
-                  type="text"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.designation}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Mobile Number"
-                  margin="normal"
-                  name="mNumber"
-                  type="text"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.mNumber}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth error={Boolean(touched.email && errors.email)}>
-                  <InputLabel htmlFor="outlined-adornment-email-register">Email Address</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-email-register"
-                    type="email"
-                    value={values.email}
-                    name="email"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  {touched.email && errors.email && (
-                    <FormHelperText error>{errors.email}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
-                  <InputLabel htmlFor="outlined-adornment-password-register">Password</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password-register"
-                    type={showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    name="password"
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e);
-                      changePassword(e.target.value);
-                    }}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  {touched.password && errors.password && (
-                    <FormHelperText error>{errors.password}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth error={Boolean(touched.confirmPass && errors.confirmPass)}>
-                  <InputLabel htmlFor="outlined-adornment-confirm-password-register">Confirm Password</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-confirm-password-register"
-                    type={showPassword ? 'text' : 'password'}
-                    value={values.confirmPass}
-                    name="confirmPass"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  {touched.confirmPass && errors.confirmPass && (
-                    <FormHelperText error>{errors.confirmPass}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        <Form noValidate>
+          <Grid container spacing={matchDownSM ? 0 : 2}>
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Employee ID" margin="normal" name="empId" type="number" />
+              <ErrorMessage name="empId" component={FormHelperText} error />
             </Grid>
-            
-            {strength !== 0 && (
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Username" margin="normal" name="username" type="text" />
+              <ErrorMessage name="username" component={FormHelperText} error />
+            </Grid>
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Department" margin="normal" name="dept" type="text" />
+              <ErrorMessage name="dept" component={FormHelperText} error />
+            </Grid>
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Designation" margin="normal" name="designation" type="text" />
+            </Grid>
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Mobile Number" margin="normal" name="mNumber" type="text" />
+            </Grid>
+            <Grid item xs={12}>
               <FormControl fullWidth>
-                <Box sx={{ mb: 2 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <Box style={{ backgroundColor: level?.color }} sx={{ width: 85, height: 8, borderRadius: '7px' }} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1" fontSize="0.75rem">
-                        {level?.label}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
+                <InputLabel htmlFor="outlined-adornment-email-register">Email Address</InputLabel>
+                <Field as={TextField} id="outlined-adornment-email-register" type="email" name="email" />
+                <ErrorMessage name="email" component={FormHelperText} error />
               </FormControl>
-            )}
-
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item>
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
-                  }
-                  label={
-                    <Typography variant="subtitle1">
-                      Agree with &nbsp;
-                      <Typography variant="subtitle1" component={Link} to="#">
-                        Terms & Condition.
-                      </Typography>
-                    </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="outlined-adornment-password-register">Password</InputLabel>
+                <Field
+                  as={TextField}
+                  id="outlined-adornment-password-register"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
                   }
                 />
-              </Grid>
+                <ErrorMessage name="password" component={FormHelperText} error />
+              </FormControl>
             </Grid>
-            {errors.submit && (
-              <Box sx={{ mt: 3 }}>
-                <FormHelperText error>{errors.submit}</FormHelperText>
-              </Box>
-            )}
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="outlined-adornment-confirm-password-register">Confirm Password</InputLabel>
+                <Field
+                  as={TextField}
+                  id="outlined-adornment-confirm-password-register"
+                  type={showPassword ? 'text' : 'password'}
+                  name="confirmPass"
+                />
+                <ErrorMessage name="confirmPass" component={FormHelperText} error />
+              </FormControl>
+            </Grid>
+          </Grid>
 
-            <Box sx={{ mt: 2 }}>
-              <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary" >
-                  Sign up
-                </Button>
-              </AnimateButton>
-            </Box>
-          </form>
-        )}
+          {strength !== 0 && (
+            <FormControl fullWidth>
+              <Box sx={{ mb: 2 }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item>
+                    <Box style={{ backgroundColor: level?.color }} sx={{ width: 85, height: 8, borderRadius: '7px' }} />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1" fontSize="0.75rem">
+                      {level?.label}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            </FormControl>
+          )}
+
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <FormControlLabel control={<Checkbox name="checked" color="primary" />} label="Agree with&nbsp;Terms & Condition." />
+            </Grid>
+          </Grid>
+          <ErrorMessage name="submit" component={FormHelperText} error />
+
+          <Box sx={{ mt: 2 }}>
+            <AnimateButton>
+              <Button fullWidth size="large" type="submit" color="secondary">
+                Sign up
+              </Button>
+            </AnimateButton>
+          </Box>
+        </Form>
       </Formik>
     </>
   );
