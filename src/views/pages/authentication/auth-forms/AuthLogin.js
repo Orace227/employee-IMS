@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
+// import { useNavigate } from 'react-router-dom';
+
 import {
   Box,
   Button,
@@ -34,10 +34,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import Google from 'assets/images/icons/social-google.svg';
+import axios from 'axios';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
+// const navigate = useNavigate();
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -56,6 +58,61 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+  /* eslint-disable no-unused-vars */
+  // const handleLogin = async (values, {setStatus}) => {
+  //   try {
+  //     const response = await fetch('http://localhost:4469/login', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email: values.email,
+  //         password: values.password,
+  //       })
+  //     });
+  
+  //     if (response.ok) {
+  //       setStatus({ success: true });
+  //       console.log("success");
+  //     } else {
+  //       const data = await response.json();
+  //       setStatus({ success: false });
+  //       setErrors({ submit: data.error || 'Login failed' });
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     setStatus({ success: false });
+  //     setErrors({ submit: err.message });
+  //   }
+  // };
+  // const handleSuccessfulLogin = () => {
+  //   // Redirect to the home page
+  //   navigate.push('/dashboard');
+  // }
+
+  const handleSubmit = async (values, setErrors, setStatus, setSubmitting) => {
+    try {
+      const response = await axios.post('/login', { email: values.email, password: values.password, });
+
+      if (response.data) {
+        setStatus({ success: true });
+        console.log(response.data)
+        
+      } else {
+        // Handle server error
+        setStatus({ success: false });
+        setErrors({ submit: 'Server error' });
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus({ success: false });
+      setErrors({ submit: err.message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
 
   return (
     <>
@@ -119,31 +176,32 @@ const FirebaseLogin = ({ ...others }) => {
       </Grid>
 
       <Formik
-        initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
-          submit: null
-        }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
-            }
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
-          }
-        }}
-      >
+  initialValues={{
+    email: '',
+    password: '',
+    submit: null
+  }}
+  validationSchema={Yup.object().shape({
+    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+    password: Yup.string().max(255).required('Password is required')
+  })}
+  onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+    try {
+      const loginResult = await handleSubmit(values, setErrors, setStatus, setSubmitting);
+      if (loginResult) {
+        setSubmitting(false);
+      }
+    } catch (err) {
+      console.error(err);
+      if (scriptedRef.current) {
+        setStatus({ success: false });
+        setErrors({ submit: err.message });
+      }
+      setSubmitting(false);
+    }
+  }}
+>
+
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
@@ -215,7 +273,15 @@ const FirebaseLogin = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                <Button disableElevation
+                disabled={isSubmitting}
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={handleSubmit}>
+
                   Sign in
                 </Button>
               </AnimateButton>
