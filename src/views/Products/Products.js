@@ -1,5 +1,5 @@
 import React from 'react';
-import photo from './category_photo.jpg';
+import photo from './catagory_photo.jpg';
 import { Link, useParams } from 'react-router-dom';
 
 const productData = [
