@@ -13,6 +13,7 @@ import themes from 'themes';
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
 
+import "tailwindcss/tailwind.css"
 // ==============================|| APP ||============================== //
 
 const App = () => {
