@@ -27,7 +27,7 @@ import axios from 'axios';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 // Define or import validDepartments
-const validDepartments = ['Department1', 'Department2'];
+const validDepartments = ['Dept1', 'Dept2'];
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // Other imports...
@@ -65,23 +65,24 @@ const FirebaseRegister = ({ ...others }) => {
     changePassword('123456');
   }, []);
 
-  // const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-  //   try {
-  //     const response = await axios.post('http://localhost:4469/register', values);
-  //     if (response.data.success) {
-  //       // Registration was successful
-  //       setStatus({ success: true });
-  //     } else {
-  //       // Handle registration error
-  //       setErrors({ submit: 'Registration failed' });
-  //     }
-  //     setSubmitting(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setErrors({ submit: error.message });
-  //     setSubmitting(false);
-  //   }
-  // };
+  const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
+    try {
+      const response = await axios.post('/register', values);
+      if (response.data) {
+        // Registration was successful
+        setStatus({ success: true });
+        console.log("success", response.data);
+      } else {
+        // Handle registration error
+        setErrors({ submit: 'Registration failed' });
+      }
+      setSubmitting(false);
+    } catch (error) {
+      console.error(error);
+      setErrors({ submit: error.message });
+      setSubmitting(false);
+    }
+  };
 
 
   return (
@@ -161,18 +162,16 @@ const FirebaseRegister = ({ ...others }) => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            const response = await axios.post('/register', values);
-            if (response.data){
-               setStatus({ success: true });
-               console.log(response.data);
-            } else {
-              // Handle registration error
-              setErrors({ submit: 'Registration failed' });
+            const registerresult = await handleSubmit(values, setErrors, setStatus, setSubmitting);
+            if (registerresult) {
+              setSubmitting(false);
             }
-            setSubmitting(false);
-          } catch (error) {
-            console.error(error);
-            setErrors({ submit: error.message });
+          } catch (err) {
+            console.error(err);
+            if (scriptedRef.current) {
+              setStatus({ success: false });
+              setErrors({ submit: err.message });
+            }
             setSubmitting(false);
           }
         }}
@@ -356,7 +355,7 @@ const FirebaseRegister = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary" >
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary" onClick={handleSubmit}>
                   Sign up
                 </Button>
               </AnimateButton>
