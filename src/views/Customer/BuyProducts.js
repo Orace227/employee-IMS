@@ -1,80 +1,61 @@
 import React from 'react';
-
+import photo from './catagory_photo.jpg';
+import { Link } from 'react-router-dom';
 const productData = [
   {
     id: 1,
-    category: 'Category 1',
     title: 'The Catalyzer',
-    price: '$16.00',
-    imageUrl: 'https://dummyimage.com/420x260'
+    description: 'lorem23 text  on the catalyzer',
+
+    imageUrl: photo
   },
   {
     id: 2,
-    category: 'Category 2',
     title: 'Shooting Stars',
-    price: '$21.15',
-    imageUrl: 'https://dummyimage.com/421x261'
+    description: 'lorem23 text  on the catalyzer',
+
+    imageUrl: photo
   },
   {
     id: 3,
-    category: 'Category 3',
     title: 'Neptune',
-    price: '$12.00',
-    imageUrl: 'https://dummyimage.com/422x262'
+    description: 'lorem23 text  on the catalyzer',
+
+    imageUrl: photo
   },
   {
     id: 4,
-    category: 'Category 4',
     title: 'The 400 Blows',
-    price: '$18.40',
-    imageUrl: 'https://dummyimage.com/423x263'
+    description: 'lorem23 text  on the catalyzer',
+
+    imageUrl: photo
   },
   {
     id: 5,
-    category: 'Category 1',
     title: 'The Catalyzer',
-    price: '$16.00',
-    imageUrl: 'https://dummyimage.com/424x264'
-  },
-  {
-    id: 6,
-    category: 'Category 2',
-    title: 'Shooting Stars',
-    price: '$21.15',
-    imageUrl: 'https://dummyimage.com/425x265'
-  },
-  {
-    id: 7,
-    category: 'Category 3',
-    title: 'Neptune',
-    price: '$12.00',
-    imageUrl: 'https://dummyimage.com/427x267'
-  },
-  {
-    id: 8,
-    category: 'Category 4',
-    title: 'The 400 Blows',
-    price: '$18.40',
-    imageUrl: './catagory_photo.jpg'
+    description: 'lorem23 text  on the catalyzer',
+    imageUrl: photo
   }
 ];
 
 const BuyProducts = () => {
   return (
     <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="flex flex-wrap -m-4">
+      <h1 className="text-3xl font-bold">Choose Category</h1>
+      <div className="container px-5 py-12 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {productData.map((product) => (
-            <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a className="block relative h-48 rounded overflow-hidden">
-                <img alt="ecommerce" className="object-cover object-center w-full h-full block" src={product.imageUrl} />
-              </a>
-              <div className="mt-4">
-                <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{product.category}</h3>
-                <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
-                <p className="mt-1">{product.price}</p>
+            <Link to="Products">
+              <div key={product.id} className="bg-white rounded shadow-lg">
+                <a className="block relative h-48 rounded-t overflow-hidden">
+                  <img alt="ecommerce" className="object-cover object-center w-full h-full" src={product.imageUrl} />
+                </a>
+                <div className="p-4">
+                  <h2 className="text-gray-900 text-2xl font-medium">{product.title}</h2>
+                  <p className="text-gray-400 text-lg">{product.description}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
