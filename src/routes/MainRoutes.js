@@ -3,11 +3,12 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-import BuyProducts from 'views/Customer/BuyProducts';
+import Categories from 'views/Products/Categories';
+import Products from 'views/Products/Products';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-const Customers = Loadable(lazy(() => import('views/Customer/Customers')));
+const Customers = Loadable(lazy(() => import('views/Products/Customers')));
 
 // sample page routing
 
@@ -35,8 +36,12 @@ const MainRoutes = {
       element: <Customers />
     },
     {
-      path: '/BuyProducts',
-      element: <BuyProducts />
+      path: '/Categories',
+      element: <Categories />
+    },
+    {
+      path: '/BuyProducts/:category',
+      element: <Products />
     }
   ]
 };

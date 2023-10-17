@@ -15,7 +15,7 @@ const pages = {
       id: 'default',
       title: 'Buy Products',
       type: 'item',
-      url: '/BuyProducts',
+      url: '/Categories',
       icon: icons.IconDashboard,
       breadcrumbs: false
     }
