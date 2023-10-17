@@ -180,7 +180,7 @@ const FirebaseRegister = ({ ...others }) => {
         }}
       >
          {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-        <form noValidate {...others}>
+         <form noValidate method="POST" {...others}>
             <Grid container spacing={matchDownSM ? 0 : 2}>
               <Grid item xs={12}>
                 <TextField
