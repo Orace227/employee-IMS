@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import axios from "axios";
+import axios from 'axios';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 // import index from 'index.css';
@@ -13,20 +13,22 @@ import themes from 'themes';
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
 
-import "tailwindcss/tailwind.css"
+import 'tailwindcss/tailwind.css';
+import { CartProvider } from 'hooks/Cart/CartOrders';
 // ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
-  axios.defaults.baseURL = "http://localhost:4469";
+  axios.defaults.baseURL = 'http://localhost:4469';
 
   return (
-    
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
         <NavigationScroll>
-          <Routes />
+          <CartProvider>
+            <Routes />
+          </CartProvider>
         </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>
