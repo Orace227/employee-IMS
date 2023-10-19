@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, ErrorMessage, Field } from 'formik';
-// import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -64,7 +64,7 @@ const FirebaseRegister = () => {
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-
+  const navigate = useNavigate();
   const googleHandler = async () => {
     console.error('Register');
   };
@@ -89,11 +89,15 @@ const FirebaseRegister = () => {
 
   const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
     try {
-      const response = await axios.post('/register', values);
+      const response = await axios.post('/register', values,
+      {
+        withCredentials: true
+      });
       if (response.data) {
         // Registration was successful
         setStatus({ success: true });
         console.log('success', response.data);
+        navigate("/dashboard");
       } else {
         // Handle registration error
         setErrors({ submit: 'Registration failed' });

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 // import index from 'index.css';
-
+import {Route} from 'react-router-dom';
 // routing
 import Routes from 'routes';
 
@@ -15,6 +15,7 @@ import NavigationScroll from 'layout/NavigationScroll';
 
 import 'tailwindcss/tailwind.css';
 import { CartProvider } from 'hooks/Cart/CartOrders';
+import FirebaseRegister from 'views/pages/authentication/auth-forms/AuthRegister';
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -27,7 +28,10 @@ const App = () => {
         <CssBaseline />
         <NavigationScroll>
           <CartProvider>
-            <Routes />
+            <Routes>
+              <Route path = "/register" Component={FirebaseRegister}></Route>
+              <Route path = "/login" Component={FirebaseRegister}></Route>
+              </Routes>
           </CartProvider>
         </NavigationScroll>
       </ThemeProvider>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
@@ -45,7 +45,7 @@ const FirebaseLogin = ({ ...others }) => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
-
+  const navigate = useNavigate();
   const googleHandler = async () => {
     console.error('Login');
   };
@@ -93,12 +93,16 @@ const FirebaseLogin = ({ ...others }) => {
 
   const handleSubmit = async (values, setErrors, setStatus, setSubmitting) => {
     try {
-      const response = await axios.post('/login', { email: values.email, password: values.password, });
+      const response = await axios.post('/login', { email: values.email, password: values.password},
+      {
+        withCredentials: true
+      }
+      );
 
       if (response.data) {
         setStatus({ success: true });
         console.log(response.data)
-        
+        navigate('/dashboard');
       } else {
         // Handle server error
         setStatus({ success: false });
