@@ -19,6 +19,7 @@
     "axios": "^1.5.1",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
+    "js-cookie": "^3.0.5",
     "material-ui-popup-state": "^4.0.1",
     "pdfmake": "^0.2.7",
     "postcss": "^8.4.31",
