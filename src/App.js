@@ -14,7 +14,6 @@ import themes from 'themes';
 import NavigationScroll from 'layout/NavigationScroll';
 
 import 'tailwindcss/tailwind.css';
-import { CartProvider } from 'hooks/Cart/CartOrders';
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -26,9 +25,9 @@ const App = () => {
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
         <NavigationScroll>
-          <CartProvider>
-            <Routes />
-          </CartProvider>
+          {/* <CartProvider> */}
+          <Routes />
+          {/* </CartProvider> */}
         </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>

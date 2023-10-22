@@ -1,74 +1,71 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import photo from './catagory_photo.jpg';
-
 const productData = [
   {
     id: 1,
     title: 'The Catalyzer',
-    category: 'TheCatalyzers',
-    description: 'lorem23 text on the catalyzer',
+    category: 'Shooting Stars',
+    description: 'lorem23 text  on the catalyzer',
     imageUrl: photo
   },
   {
     id: 2,
     title: 'Shooting Stars',
-    category: 'TheCatalyzers',
-    description: 'lorem23 text on the catalyzer',
-    imageUrl: photo
-  },
-  {
-    id: 6,
-    title: 'Shooting Stars',
     category: 'Shooting Stars',
-    description: 'lorem23 text on the catalyzer',
-    imageUrl: photo
-  },
-  {
-    id: 7,
-    title: 'Shooting Stars',
-    category: 'Shooting Stars',
-    description: 'lorem23 text on the catalyzer',
+    description: 'lorem23 text  on the catalyzer',
     imageUrl: photo
   },
   {
     id: 3,
     title: 'Neptune',
     category: 'TheCatalyzers',
-    description: 'lorem23 text on the catalyzer',
+    description: 'lorem23 text  on the catalyzer',
+    quantity: 10,
     imageUrl: photo
   },
   {
     id: 4,
     title: 'The 400 Blows',
     category: 'TheCatalyzers',
-    description: 'lorem23 text on the catalyzer',
+    description: 'lorem23 text  on the catalyzer',
     imageUrl: photo
   },
   {
     id: 5,
     title: 'The Catalyzer',
     category: 'TheCatalyzers',
-    description: 'lorem23 text on the catalyzer',
+    description: 'lorem23 text  on the catalyzer',
+    quantity: 10,
     imageUrl: photo
   }
 ];
+
 const Products = () => {
   const { category } = useParams();
-  const [addedToCart, setAddedToCart] = useState([]);
+  const isProductInCart = (product) => {
+    let cart = JSON.parse(localStorage.getItem('cart'));
 
+    return cart.filter((item) => item.id == product.id);
+  };
   const handleAddToCart = (product) => {
-    const isProductAdded = addedToCart.includes(product);
+    // Get the current cart from local storage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    if (isProductAdded) {
+    // Check if the product is already in the cart
+    const isProductInCartLocal = cart.some((item) => item.id === product.id);
+
+    if (isProductInCartLocal) {
       // If the product is already in the cart, remove it
-      setAddedToCart((prevCart) => prevCart.filter((cartProduct) => cartProduct.id !== product.id));
+      cart = cart.filter((item) => item.id !== product.id);
     } else {
       // If the product is not in the cart, add it
-      setAddedToCart((prevCart) => [...prevCart, product]);
+      cart.push(product);
     }
+
+    // Update the local storage with the modified cart
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
-  console.log(addedToCart);
 
   // Filter the product data based on the category
   const filteredProducts = category ? productData.filter((product) => product.category === category) : productData;
@@ -92,10 +89,10 @@ const Products = () => {
                   <button
                     onClick={() => handleAddToCart(product)}
                     className={`bg-blue-500 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-600 shadow-md transform transition-transform duration-300 ${
-                      addedToCart.find((cartProduct) => cartProduct.id === product.id) ? 'scale-105' : ''
+                      isProductInCart(product) ? 'scale-105' : ''
                     }`}
                   >
-                    {addedToCart.find((cartProduct) => cartProduct.id === product.id) ? 'Added to Cart' : 'Add to Cart'}
+                    {isProductInCart(product) ? 'Added to Cart' : 'Add to Cart'}
                   </button>
                 </div>
               </div>

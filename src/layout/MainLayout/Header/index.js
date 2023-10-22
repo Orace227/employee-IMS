@@ -8,10 +8,9 @@ import { Avatar, Box, ButtonBase } from '@mui/material';
 import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
-import NotificationSection from './NotificationSection';
-
 // assets
-import { IconMenu2 } from '@tabler/icons';
+import { IconMenu2, IconBell } from '@tabler/icons';
+import { Link } from 'react-router-dom';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -54,14 +53,17 @@ const Header = ({ handleLeftDrawerToggle }) => {
           </Avatar>
         </ButtonBase>
       </Box>
-
       {/* header search */}
       <SearchSection />
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
-
       {/* notification & profile */}
-      <NotificationSection />
+      <div className="m-2 mr-3 hover:cursor-pointer bg-purple-200 text-purple-600 p-[6px]  rounded-lg">
+        <Link to={`/Cart`}>
+          <IconBell />
+        </Link>
+      </div>
+      {/* <NotificationSection /> */}
       <ProfileSection />
     </>
   );
