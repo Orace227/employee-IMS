@@ -16,6 +16,7 @@ import NavigationScroll from 'layout/NavigationScroll';
 import 'tailwindcss/tailwind.css';
 // import { CartProvider } from 'hooks/Cart/CartOrders';
 import FirebaseRegister from 'views/pages/authentication/auth-forms/AuthRegister';
+import CartManager from 'Helpers/CartManager';
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -26,14 +27,16 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
-        <NavigationScroll>
-          {/* <CartProvider> */}
-          <Routes>
-            <Route path="/register" Component={FirebaseRegister}></Route>
-            <Route path="/login" Component={FirebaseRegister}></Route>
-          </Routes>
-          {/* </CartProvider>/ */}
-        </NavigationScroll>
+        <CartManager>
+          <NavigationScroll>
+            {/* <CartProvider> */}
+            <Routes>
+              <Route path="/register" Component={FirebaseRegister}></Route>
+              <Route path="/login" Component={FirebaseRegister}></Route>
+            </Routes>
+            {/* </CartProvider>/ */}
+          </NavigationScroll>
+        </CartManager>
       </ThemeProvider>
     </StyledEngineProvider>
   );

@@ -57,8 +57,8 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           value={filterName}
           onChange={onFilterName}
           placeholder={`Search ${
-            placeholder === 'Packages'
-              ? 'Packages...'
+            placeholder === 'History'
+              ? 'History...'
               : placeholder === 'Customers'
               ? 'Customers...'
               : placeholder === 'Countries'

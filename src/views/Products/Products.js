@@ -1,26 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import photo from './catagory_photo.jpg';
+
+import { syncCartWithDatabase } from 'EndPoints/CreateOrder';
+
 const productData = [
   {
     id: 1,
     title: 'The Catalyzer',
     category: 'Shooting Stars',
-    description: 'lorem23 text  on the catalyzer',
+    quantity: 10,
+    description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
   {
     id: 2,
     title: 'Shooting Stars',
     category: 'Shooting Stars',
-    description: 'lorem23 text  on the catalyzer',
+    quantity: 10,
+    description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
   {
     id: 3,
     title: 'Neptune',
     category: 'TheCatalyzers',
-    description: 'lorem23 text  on the catalyzer',
+    description: 'lorem23 text on the catalyzer',
     quantity: 10,
     imageUrl: photo
   },
@@ -28,26 +33,29 @@ const productData = [
     id: 4,
     title: 'The 400 Blows',
     category: 'TheCatalyzers',
-    description: 'lorem23 text  on the catalyzer',
+    quantity: 10,
+    description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
   {
     id: 5,
     title: 'The Catalyzer',
     category: 'TheCatalyzers',
-    description: 'lorem23 text  on the catalyzer',
-    quantity: 10,
+    description: 'lorem23 text on the catalyzer',
+    quantity: 1,
     imageUrl: photo
   }
 ];
 
 const Products = () => {
   const { category } = useParams();
+  const [cartUpdated, setCartUpdated] = useState(null); // Initialize a state variable
+  console.log(cartUpdated);
   const isProductInCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem('cart'));
-
-    return cart.filter((item) => item.id == product.id);
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    return cart.some((item) => item.id === product.id);
   };
+
   const handleAddToCart = (product) => {
     // Get the current cart from local storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -65,7 +73,16 @@ const Products = () => {
 
     // Update the local storage with the modified cart
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Set the state variable to trigger a re-render
+    setCartUpdated(new Date().getTime());
   };
+
+  useEffect(() => {
+    // Get the current cart from local storage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    syncCartWithDatabase(cart);
+  }, []);
 
   // Filter the product data based on the category
   const filteredProducts = category ? productData.filter((product) => product.category === category) : productData;
@@ -88,8 +105,8 @@ const Products = () => {
                   <p className="text-gray-400 text-lg">{product.description}</p>
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className={`bg-blue-500 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-600 shadow-md transform transition-transform duration-300 ${
-                      isProductInCart(product) ? 'scale-105' : ''
+                    className={`bg-blue-500 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-600 shadow-md transform transition-transform duration-300${
+                      isProductInCart(product) ? ' scale-105' : ''
                     }`}
                   >
                     {isProductInCart(product) ? 'Added to Cart' : 'Add to Cart'}
