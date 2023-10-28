@@ -27,7 +27,7 @@ const MainRoutes = {
       path: 'dashboard',
       element: <DashboardDefault />
     },
-    {
+    { 
       path: '/Products',
       element: <Customers />
     },

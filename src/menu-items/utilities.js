@@ -12,6 +12,7 @@ const icons = {
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
 const utilities = {
+
   id: 'utilities',
   title: 'Utilities',
   type: 'group',
