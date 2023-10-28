@@ -19,22 +19,22 @@ const orders = {
       icon: icons.IconPackages,
       children: [
         {
-          id: 'history',
-          title: 'Orders History',
-          type: 'item',
-          url: '/OrderHistory',
-          breadcrumbs: false
-        },
-        {
           id: 'pandingOrders',
           title: 'Panding Orders',
           type: 'item',
-          url: '/OrderHistory',
+          url: '/PendingOrders',
           breadcrumbs: false
         },
         {
           id: 'confirmedOrders',
           title: 'Confirmed Orders',
+          type: 'item',
+          url: '/ConfirmedOrders',
+          breadcrumbs: false
+        },
+        {
+          id: 'history',
+          title: 'Orders History',
           type: 'item',
           url: '/OrderHistory',
           breadcrumbs: false

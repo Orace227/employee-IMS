@@ -23,6 +23,7 @@ import React from 'react';
 // import * as Yup from 'yup';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -56,10 +57,11 @@ const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
   { id: 'NoOfItems', label: 'No of Items', alignRight: false },
   { id: 'orderDate', label: 'Order Date', alignRight: false },
+  { id: 'Status', label: 'Status', alignRight: false },
   { id: 'action', label: 'Action', alignRight: false }
 ];
 
-export default function History() {
+export default function ConfirmedOrders() {
   // const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -72,11 +74,11 @@ export default function History() {
   const fetchCustomers = () => {
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456`)
+        .get(`/GetOrders?cartId=123456&Status=approved`)
         .then((response) => {
           const orderData = response.data.existedOrders;
           setUserlist(orderData);
-          toast.success('Order Fetched Successfully!');
+          //   toast.success('Order Fetched Successfully!');
 
           resolve(orderData);
         })
@@ -88,9 +90,9 @@ export default function History() {
     });
 
     toast.promise(promise, {
-      loading: 'Fetching Order...',
-      success: 'Order fetched successfully!',
-      error: 'Failed to fetch Order!'
+      loading: 'Fetching Confirmed Order...',
+      success: 'Confirmed Order fetched successfully!!',
+      error: 'Failed to fetch Confirmed Order!!!'
     });
   };
 
@@ -161,7 +163,7 @@ export default function History() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} mt={1}>
           <Typography variant="h1" gutterBottom>
-            Order History
+            Confirmed Orders
           </Typography>
         </Stack>
         <Toaster />
@@ -187,7 +189,7 @@ export default function History() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       // console.log(row);
-                      const { orderId, products, title, createdAt } = row;
+                      const { orderId, products, title, createdAt, Status } = row;
                       const selectedUser = selected.indexOf(orderId) !== -1;
                       const createdDate = new Date(createdAt);
                       const formattedDate = `${createdDate.getDate()}-${createdDate.getMonth() + 1}-${createdDate.getFullYear()}`;
@@ -196,10 +198,28 @@ export default function History() {
                           <TableRow hover key={orderId} tabIndex={-1} role="checkbox" selected={selectedUser}>
                             <TableCell align="left">{orderId}</TableCell>
                             {/* <TableCell align="left">{cartId}</TableCell> */}
-                            <TableCell align="left">{title}</TableCell>
-
+                            <TableCell align="left">
+                              <Link to={`/OrderView/${orderId}`} className="font-semibold hover:cursor-pointer">
+                                {title}
+                              </Link>
+                            </TableCell>
                             <TableCell align="left">{products.length}</TableCell>
                             <TableCell align="left">{formattedDate}</TableCell>
+                            <TableCell align="left">
+                              <div
+                                className={`p-1 w-[90px] rounded-full text-center ${
+                                  Status === 'pending'
+                                    ? 'bg-yellow-200'
+                                    : Status === 'approved'
+                                    ? 'bg-green-200'
+                                    : Status === 'canceled'
+                                    ? 'bg-red-200'
+                                    : ''
+                                }`}
+                              >
+                                {Status}
+                              </div>
+                            </TableCell>
                             <TableCell align="left">
                               <IconButton
                                 size="large"
