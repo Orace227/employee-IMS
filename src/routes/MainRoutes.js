@@ -52,6 +52,7 @@ const MainRoutes = {
       path: '*',
       element: <NotFound/>
     }
+    
 
   ]
 };
