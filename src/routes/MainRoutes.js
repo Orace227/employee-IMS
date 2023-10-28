@@ -6,7 +6,8 @@ import Loadable from 'ui-component/Loadable';
 import Categories from 'views/Products/Categories';
 import Products from 'views/Products/Products';
 import Cart from 'views/Cart/Cart';
-
+import History from 'views/History/History';
+import NotFound from '404Notfound/404page';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Customers = Loadable(lazy(() => import('views/Products/Customers')));
@@ -42,7 +43,16 @@ const MainRoutes = {
     {
       path: '/Cart',
       element: <Cart />
+    },
+    {
+      path: '/OrderHistory',
+      element: <History />
+    },
+    {
+      path: '*',
+      element: <NotFound/>
     }
+
   ]
 };
 

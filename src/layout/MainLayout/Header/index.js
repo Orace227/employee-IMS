@@ -9,7 +9,7 @@ import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
 // assets
-import { IconMenu2, IconBell } from '@tabler/icons';
+import { IconMenu2, IconShoppingCart } from '@tabler/icons';
 import { Link } from 'react-router-dom';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
@@ -60,7 +60,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       {/* notification & profile */}
       <div className="m-2 mr-3 hover:cursor-pointer bg-purple-200 text-purple-600 p-[6px]  rounded-lg">
         <Link to={`/Cart`}>
-          <IconBell />
+          <IconShoppingCart />
         </Link>
       </div>
       {/* <NotificationSection /> */}
