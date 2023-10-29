@@ -9,7 +9,7 @@ const productData = [
     id: 1,
     title: 'The Catalyzer',
     category: 'Shooting Stars',
-    quantity: 10,
+    actualQuantity: 10,
     description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
@@ -17,7 +17,7 @@ const productData = [
     id: 2,
     title: 'Shooting Stars',
     category: 'Shooting Stars',
-    quantity: 10,
+    actualQuantity: 10,
     description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
@@ -26,14 +26,14 @@ const productData = [
     title: 'Neptune',
     category: 'TheCatalyzers',
     description: 'lorem23 text on the catalyzer',
-    quantity: 10,
+    actualQuantity: 10,
     imageUrl: photo
   },
   {
     id: 4,
     title: 'The 400 Blows',
     category: 'TheCatalyzers',
-    quantity: 10,
+    actualQuantity: 10,
     description: 'lorem23 text on the catalyzer',
     imageUrl: photo
   },
@@ -42,7 +42,7 @@ const productData = [
     title: 'The Catalyzer',
     category: 'TheCatalyzers',
     description: 'lorem23 text on the catalyzer',
-    quantity: 1,
+    actualQuantity: 1,
     imageUrl: photo
   }
 ];
