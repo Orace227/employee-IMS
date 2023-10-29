@@ -110,8 +110,31 @@ export default function OrderView() {
                       <strong>Description:</strong> {product.description}
                     </Typography>
                     <Typography variant="body1" className="text-base text-gray-500">
-                      <strong>Quantity:</strong> {product.quantity}
+                      <strong>Quantity:</strong> {product.actualQuantity}
                     </Typography>
+                    <Typography variant="body1" style={{ fontSize: '17px' }}>
+                      <div className="flex text-base text-gray-500">
+                        <strong className="mt-1">Status: </strong>
+                        <div
+                          className={`mt-1 ml-1 w-24 rounded-full text-center ${
+                            orderData.Status === 'pending'
+                              ? 'bg-yellow-200'
+                              : orderData.Status === 'approved'
+                              ? 'bg-green-200'
+                              : orderData.Status === 'canceled'
+                              ? 'bg-red-200'
+                              : ''
+                          }`}
+                        >
+                          {orderData.Status}
+                        </div>
+                      </div>
+                    </Typography>
+                    {product.remarks && (
+                      <Typography variant="body1" className="text-base text-gray-500">
+                        <strong>Remark:</strong> {product.remarks}
+                      </Typography>
+                    )}
                   </div>
                   {(index + 1) % 2 === 0 && <div style={{ width: '100%', clear: 'both' }}></div>}
                 </Grid>

@@ -11,7 +11,7 @@ const Cart = () => {
   const updateItemQuantity = (itemId, newQuantity) => {
     const updatedCart = cartItems.map((item) => {
       if (item.id === itemId) {
-        return { ...item, quantity: newQuantity };
+        return { ...item, actualQuantity: newQuantity };
       }
       return item;
     });
@@ -95,17 +95,22 @@ const Cart = () => {
 
   return (
     <div className="h-screen bg-gray-100">
-      <h1 className=" text-3xl font-bold">Cart Items</h1>
-      <div className="flex items-baseline">
-        <h1 className="text-lg font-semibold ">Order Name: </h1>
-        <input
-          type="text"
-          className="mb-10 text-md outline-none ml-2 bg-inherit border rounded-lg  p-2"
-          placeholder="Enter Title of Order"
-          value={orderName}
-          onChange={handleOrderNameChange}
-        />
-      </div>
+      {cartItems.length !== 0 && (
+        <>
+          <h1 className=" text-3xl font-bold">Cart Items</h1>
+          <div className="flex items-baseline">
+            <h1 className="text-lg font-semibold ">Order Name: </h1>
+            <input
+              type="text"
+              className="mb-10 text-md outline-none ml-2 bg-inherit border rounded-lg  p-2"
+              placeholder="Enter Title of Order"
+              value={orderName}
+              onChange={handleOrderNameChange}
+            />
+          </div>
+        </>
+      )}
+
       <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
         <div className="rounded-lg md:w-2/3">
           {cartItems.length !== 0 ? (
@@ -117,7 +122,7 @@ const Cart = () => {
                   imageSrc={item.imageUrl}
                   title={item.title}
                   description={item.description}
-                  quantity={item.quantity}
+                  actualQuantity={item.actualQuantity || ' '}
                   price="259.000 ₭"
                   onDelete={handleDelete}
                   updateItemQuantity={updateItemQuantity} // Pass the updateItemQuantity function
@@ -126,7 +131,7 @@ const Cart = () => {
             </div>
           ) : (
             <div className="flex justify-center items-center md:h-full">
-              <h1 className="text-center text-3xl text-red-500">Please Choose Item to make an order!!</h1>
+              <h1 className="text-center text-3xl mt-20 text-red-500">Please Choose Item to make an order!!</h1>
             </div>
           )}
         </div>
@@ -141,8 +146,8 @@ const Cart = () => {
   );
 };
 
-const CartItemDetail = ({ id, imageSrc, title, description, quantity, onDelete, updateItemQuantity }) => {
-  const [productQuantity, setProductQuantity] = useState(quantity);
+const CartItemDetail = ({ id, imageSrc, title, description, actualQuantity, onDelete, updateItemQuantity }) => {
+  const [productQuantity, setProductQuantity] = useState(actualQuantity);
 
   const handleIncrement = () => {
     const newQuantity = productQuantity + 1;
@@ -199,7 +204,7 @@ const CartItemDetail = ({ id, imageSrc, title, description, quantity, onDelete, 
             <input
               className="h-7 w-16 border bg-white text-center text-xs outline-none"
               type="text"
-              value={productQuantity}
+              value={productQuantity || ' '}
               onInput={handleQuantityChange}
             />
             <button
@@ -230,7 +235,7 @@ const SubTotal = ({ cartItems, handleSubmit, orderName }) => {
         {cartItems.map((item, index) => (
           <div key={index} className="flex justify-between">
             <p className="text-md font-normal">{item.title}</p>
-            <p className="text-md font-normal">{item.quantity}</p>
+            <p className="text-md font-normal">{item?.actualQuantity}</p>
           </div>
         ))}
       </div>
