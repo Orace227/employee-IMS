@@ -25,13 +25,15 @@ const orders = {
           url: '/PendingOrders',
           breadcrumbs: false
         },
+
         {
-          id: 'confirmedOrders',
-          title: 'Confirmed Orders',
+          id: 'attendedOrders',
+          title: 'Attended Orders',
           type: 'item',
-          url: '/ConfirmedOrders',
+          url: '/AttendedOrders',
           breadcrumbs: false
         },
+
         {
           id: 'history',
           title: 'Orders History',

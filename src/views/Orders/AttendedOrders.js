@@ -23,8 +23,7 @@ import React from 'react';
 // import * as Yup from 'yup';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -70,11 +69,14 @@ export default function ConfirmedOrders() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [USERLIST, setUserlist] = useState([]);
+  const [isHighlighted, setHighlighted] = useState();
+  const { search } = useLocation();
 
+  // console.log(useLocation());
   const fetchCustomers = () => {
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=approved`)
+        .get(`/GetOrders?cartId=123456&Status=attended`)
         .then((response) => {
           const orderData = response.data.existedOrders;
           setUserlist(orderData);
@@ -97,6 +99,12 @@ export default function ConfirmedOrders() {
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(search);
+    const receivedOrderId = params.get('receivedOrderId');
+    setHighlighted(receivedOrderId);
+    setTimeout(() => {
+      setHighlighted(0);
+    }, 2000);
     fetchCustomers();
   }, []);
 
@@ -193,9 +201,17 @@ export default function ConfirmedOrders() {
                       const selectedUser = selected.indexOf(orderId) !== -1;
                       const createdDate = new Date(createdAt);
                       const formattedDate = `${createdDate.getDate()}-${createdDate.getMonth() + 1}-${createdDate.getFullYear()}`;
+                      const Highlighted = isHighlighted == orderId;
                       return (
                         <>
-                          <TableRow hover key={orderId} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                          <TableRow
+                            className={`${Highlighted ? 'bg-gray-300' : ' '}`}
+                            hover
+                            key={orderId}
+                            tabIndex={-1}
+                            role="checkbox"
+                            selected={selectedUser}
+                          >
                             <TableCell align="left">{orderId}</TableCell>
                             {/* <TableCell align="left">{cartId}</TableCell> */}
                             <TableCell align="left">
@@ -207,15 +223,8 @@ export default function ConfirmedOrders() {
                             <TableCell align="left">{formattedDate}</TableCell>
                             <TableCell align="left">
                               <div
-                                className={`p-1 w-[90px] rounded-full text-center ${
-                                  Status === 'pending'
-                                    ? 'bg-yellow-200'
-                                    : Status === 'approved'
-                                    ? 'bg-green-200'
-                                    : Status === 'canceled'
-                                    ? 'bg-red-200'
-                                    : ''
-                                }`}
+                                className={`p-1 w-[90px] rounded-full text-center bg-blue-200
+                                `}
                               >
                                 {Status}
                               </div>

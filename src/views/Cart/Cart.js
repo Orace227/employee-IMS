@@ -67,13 +67,18 @@ const Cart = () => {
     try {
       let cartData = {};
       console.log('in submit:', { cartItems });
-
+      // let allCookies = document.cookie;
+      // console.log(allCookies);
       cartData.cartId = 123456;
       cartData.orderId = generateRandom6DigitNumber();
       cartData.title = orderName;
       cartData.products = cartItems;
       console.log('in submit after change:', cartData);
-      const createOrder = await axios.post('/CreateOrder', cartData);
+      const createOrder = await axios.post('/CreateOrder', cartData, {
+        headers: {
+          Cookie: 'authToken=cookieValue'
+        }
+      });
       if (createOrder) {
         console.log(createOrder);
         toast.success('Your Order placed successfully!!');
