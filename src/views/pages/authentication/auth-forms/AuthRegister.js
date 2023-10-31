@@ -98,7 +98,7 @@ const FirebaseRegister = () => {
         // Registration was successful
         setStatus({ success: true });
         console.log('success', response.data);     
-        navigate("/dashboard");
+        navigate('/dashboard');
       } else {
         // Handle registration error
         setErrors({ submit: 'Registration failed' });

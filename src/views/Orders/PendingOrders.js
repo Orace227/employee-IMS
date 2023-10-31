@@ -125,7 +125,9 @@ export default function PendingOrders() {
   const handleSubmit = async (values) => {
     // console.log(editedUserData);
     console.log('values', values);
-    const updatedCustomer = await axios.post('/updateClient', values);
+    const updatedCustomer = await axios.post('/updateClient', values,{
+      withCredentials: true, // Include credentials (cookies) with the request
+    });
     console.log(updatedCustomer);
     toast.success('Customer updated successfully!!');
     handleSaveChanges();
@@ -177,7 +179,9 @@ export default function PendingOrders() {
       console.log(user);
       const isDelete = window.confirm('Are you sure you want to delete Order having name ' + user.title);
       if (isDelete) {
-        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`);
+        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`,{
+          withCredentials: true, // Include credentials (cookies) with the request
+        });
         if (deletedCustomer) {
           toast.success('Order deleted successfully!!');
           window.location.reload();

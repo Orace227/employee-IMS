@@ -61,8 +61,10 @@ const TotalApprovedCard = ({ isLoading }) => {
   // };
 
   const getCancledOrders = async () => {
-    const CanceledOrders = await axios.get('/GetOrders?Status=approved&cartId=123456');
-    if (CanceledOrders) {
+    const CanceledOrders = await axios.get('/GetOrders?Status=approved&cartId=123456', {
+      withCredentials: true, // Include credentials (cookies) with the request
+       });
+       if (CanceledOrders) {
       // console.log(CanceledOrders.data.existedOrders.length);
       setOrderCount(CanceledOrders.data.existedOrders.length);
     }

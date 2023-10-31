@@ -75,7 +75,9 @@ const Cart = () => {
       cartData.title = orderName;
       cartData.products = cartItems;
       console.log('in submit after change:', cartData);
-      const createOrder = await axios.post('/CreateOrder', cartData);
+      const createOrder = await axios.post('/CreateOrder', cartData, {
+        withCredentials: true, // Include credentials (cookies) with the request
+         });
       if (createOrder) {
         console.log(createOrder);
         toast.success('Your Order placed successfully!!');

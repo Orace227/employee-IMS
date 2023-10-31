@@ -21,7 +21,9 @@ const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
   const handleNotification = async () => {
     try {
-      const Notification = await axios.get('/GetOrders?EmployeeNotification=true&cartId=123456');
+      const Notification = await axios.get('/GetOrders?EmployeeNotification=true&cartId=123456', {
+    withCredentials: true, // Include credentials (cookies) with the request
+     });
       console.log(Notification.data.existedOrders);
       const NotificationArr = Notification.data.existedOrders;
       NotificationArr.forEach((element) => {
@@ -82,7 +84,9 @@ const Dashboard = () => {
           });
         }
         element.EmployeeNotification = false;
-        const offNotification = axios.post('/UpdateOrder', element);
+        const offNotification = axios.post('/UpdateOrder', element, {
+            withCredentials: true, // Include credentials (cookies) with the request
+             });
         if (offNotification) {
           console.log(offNotification);
         }
