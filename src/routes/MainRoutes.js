@@ -11,6 +11,7 @@ import NotFound from '404Notfound/404page';
 import PendingOrders from 'views/Orders/PendingOrders';
 import OrderView from 'views/Orders/OrderView';
 import AttendedOrders from 'views/Orders/AttendedOrders';
+// import Navigate from "react-router-dom";
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Customers = Loadable(lazy(() => import('views/Products/Customers')));

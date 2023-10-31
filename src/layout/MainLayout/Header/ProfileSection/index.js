@@ -38,9 +38,8 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
-
+import axios from 'axios';
 // ==============================|| PROFILE MENU ||============================== //
-
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
@@ -56,7 +55,17 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
-    console.log('Logout');
+    try {
+      const response = await axios.get('/logout',{
+        withCredentials:true
+      });
+        if (response.status === 200) {
+          navigate("/login");  
+        }
+    } catch (error) {
+      // Handle any errors, such as network issues or server errors
+      console.error('Logout error:', error);
+    }
   };
 
   const handleClose = (event) => {
