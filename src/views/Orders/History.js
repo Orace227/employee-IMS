@@ -74,7 +74,9 @@ export default function History() {
   const fetchCustomers = () => {
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=canceled&Status=approved`)
+        .get(`/GetOrders?cartId=123456&Status=canceled&Status=approved`,{
+          withCredentials: true, // Include credentials (cookies) with the request
+        })
         .then((response) => {
           const orderData = response.data.existedOrders;
           setUserlist(orderData);
@@ -141,7 +143,9 @@ export default function History() {
       console.log(user);
       const isDelete = window.confirm('Are you sure you want to delete Order having name ' + user.title);
       if (isDelete) {
-        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`);
+        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`,{
+          withCredentials: true, // Include credentials (cookies) with the request
+        });
         if (deletedCustomer) {
           toast.success('Order deleted successfully!!');
           window.location.reload();

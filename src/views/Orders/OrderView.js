@@ -11,7 +11,9 @@ export default function OrderView() {
 
   const getOrders = () => {
     return axios
-      .get(`/GetOrders?orderId=${orderId}`)
+      .get(`/GetOrders?orderId=${orderId}`,{
+        withCredentials: true, // Include credentials (cookies) with the request
+      })
       .then((response) => {
         const oneOrder = response.data.existedOrders[0];
         if (oneOrder) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
+
 import {
   Box,
   Button,
@@ -96,7 +97,7 @@ const FirebaseRegister = () => {
       if (response.data) {
         // Registration was successful
         setStatus({ success: true });
-        console.log('success', response.data);
+        console.log('success', response.data);     
         navigate("/dashboard");
       } else {
         // Handle registration error
@@ -109,7 +110,9 @@ const FirebaseRegister = () => {
       setSubmitting(false);
     }
   };
-
+  useEffect(() => {
+    changePassword('123456');
+  }, []);
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>

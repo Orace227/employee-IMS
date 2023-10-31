@@ -4,11 +4,12 @@ import { syncCartWithDatabase } from 'EndPoints/CreateOrder';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 const Cart = () => {
+ 
   const [cartItems, setCart] = useState([]);
   const [orderName, setOrderName] = useState(''); // State for order name
 
   // Function to update the quantity of an item in the cart
-  const updateItemQuantity = (itemId, newQuantity) => {
+  const updateItemQuantity = (itemId, newQuantity) => { 
     const updatedCart = cartItems.map((item) => {
       if (item.id === itemId) {
         return { ...item, quantity: newQuantity };
@@ -73,12 +74,17 @@ const Cart = () => {
       cartData.title = orderName;
       cartData.products = cartItems;
       console.log('in submit after change:', cartData);
-      const createOrder = await axios.post('/CreateOrder', cartData);
+      const createOrder = await axios.post('/CreateOrder', cartData, {
+        withCredentials: true
+      });
       if (createOrder) {
         console.log(createOrder);
         toast.success('Your Order placed successfully!!');
         localStorage.setItem('cart', '[]');
-        const createdCart = await axios.post('/CreateCart', cartData);
+        const createdCart = await axios.post('/CreateCart', cartData,
+        {
+          withCredentials: true
+        });
         if (createdCart) {
           console.log(createdCart);
         }

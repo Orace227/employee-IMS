@@ -74,7 +74,9 @@ export default function PendingOrders() {
   const fetchCustomers = () => {
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=pending`)
+        .get(`/GetOrders?cartId=123456&Status=pending`,{
+          withCredentials: true, // Include credentials (cookies) with the request
+        })
         .then((response) => {
           const orderData = response.data.existedOrders;
           setUserlist(orderData);
