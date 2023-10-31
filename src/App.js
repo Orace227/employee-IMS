@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 // import index from 'index.css';
 import { Route } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 // routing
 import Routes from 'routes';
 
@@ -17,11 +18,28 @@ import 'tailwindcss/tailwind.css';
 // import { CartProvider } from 'hooks/Cart/CartOrders';
 import FirebaseRegister from 'views/pages/authentication/auth-forms/AuthRegister';
 import CartManager from 'Helpers/CartManager';
+
 // ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
   axios.defaults.baseURL = 'http://localhost:4469';
+  axios.defaults.withCredentials = true;
+  
+  const navigate = useNavigate();
+
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        console.log('Redirecting to login');
+        navigate('/login');
+      }
+
+      return Promise.reject(error);
+    }
+  );
+  
 
   return (
     <StyledEngineProvider injectFirst>

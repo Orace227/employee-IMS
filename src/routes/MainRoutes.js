@@ -14,7 +14,7 @@ import AttendedOrders from 'views/Orders/AttendedOrders';
 // import Navigate from "react-router-dom";
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-const Customers = Loadable(lazy(() => import('views/Products/Customers')));
+const Customers = Loadable(lazy(() => import('views/Products/Customers'))); 
 
 // sample page routing
 
@@ -67,7 +67,7 @@ const MainRoutes = {
 
     {
       path: '*',
-      element: <NotFound />
+      element: <NotFound />,
     }
   ]
 };
