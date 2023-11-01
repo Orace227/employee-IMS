@@ -11,8 +11,8 @@ export default function OrderView() {
 
   const getOrders = () => {
     return axios
-      .get(`/GetOrders?orderId=${orderId}`,{
-        withCredentials: true, // Include credentials (cookies) with the request
+      .get(`/GetOrders?orderId=${orderId}`, {
+        withCredentials: true // Include credentials (cookies) with the request
       })
       .then((response) => {
         const oneOrder = response.data.existedOrders[0];
@@ -105,7 +105,7 @@ export default function OrderView() {
                 <Grid item xs={12} sm={6} key={product._id.$oid}>
                   <div className="bg-white border border-gray-300 rounded p-4 shadow-md">
                     <Typography variant="h6" className="text-lg font-bold mb-2">
-                      {product.title}
+                      Product Name: {product.productName}
                     </Typography>
                     <Typography variant="body1" className="text-base text-gray-500 mb-2">
                       <strong>Category:</strong> {product.category}

@@ -43,10 +43,7 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/OrderHistory?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/OrderHistory?receivedOrderId=${receivedOrderId}`);
             }
           });
         }
@@ -61,10 +58,7 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/ConfirmedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
             }
           });
         }
@@ -80,10 +74,7 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/ConfirmedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/OrderHistory?receivedOrderId=${receivedOrderId}`);
             }
           });
         }

@@ -99,10 +99,8 @@ const Products = () => {
               </div>
             ))
           ) : (
-            <div className="flex justify-center items-center mt-20 sm:ml-20 md:ml-40 lg:ml-60 xl:ml-80 2xl:ml-96">
-              <div>
-                <p className="text-center text-3xl text-red-500">Products are not Available!!!</p>
-              </div>
+            <div>
+              <p className="my-10 text-3xl text-red-500">Products are not available!!!</p>
             </div>
           )}
         </div>
