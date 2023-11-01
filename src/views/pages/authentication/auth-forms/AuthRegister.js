@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, ErrorMessage, Field } from 'formik';
-import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
   Button,
+  CardContent,
   Checkbox,
+  Card, 
   Divider,
   FormControl,
   FormControlLabel,
@@ -65,7 +66,8 @@ const FirebaseRegister = () => {
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-  const navigate = useNavigate();
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
   const googleHandler = async () => {
     console.error('Register');
   };
@@ -97,8 +99,8 @@ const FirebaseRegister = () => {
       if (response.data) {
         // Registration was successful
         setStatus({ success: true });
+        setRegistrationSuccess(true); 
         console.log('success', response.data);     
-        navigate('/dashboard');
       } else {
         // Handle registration error
         setErrors({ submit: 'Registration failed' });
@@ -115,6 +117,7 @@ const FirebaseRegister = () => {
   }, []);
   return (
     <>
+  
       <Grid container direction="column" justifyContent="center" spacing={2}>
         <Grid item xs={12}>
           <AnimateButton>
@@ -163,6 +166,26 @@ const FirebaseRegister = () => {
           </Box>
         </Grid>
       </Grid>
+      {registrationSuccess && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Card sx={{
+            width: '500px ',
+            height: '300px',
+            borderRadius: 4,
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
+          }}>
+            <CardContent>
+              <Typography variant="h5" align="center">
+                Your request has been sent to the branch manager.
+              </Typography>
+              <Typography variant="subtitle1" align="center">
+                You will receive an email when your request is approved.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+      )}
+
 
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form noValidate>
