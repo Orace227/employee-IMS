@@ -4,14 +4,13 @@ import { syncCartWithDatabase } from 'EndPoints/CreateOrder';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 const Cart = () => {
- 
   const [cartItems, setCart] = useState([]);
   const [orderName, setOrderName] = useState(''); // State for order name
 
   // Function to update the quantity of an item in the cart
-  const updateItemQuantity = (itemId, newQuantity) => { 
+  const updateItemQuantity = (itemId, newQuantity) => {
     const updatedCart = cartItems.map((item) => {
-      if (item.id === itemId) {
+      if (item.productId === itemId) {
         return { ...item, actualQuantity: newQuantity };
       }
       return item;
@@ -48,7 +47,7 @@ const Cart = () => {
   const handleDelete = async (key) => {
     try {
       const cart = JSON.parse(localStorage.getItem('cart'));
-      const updatedCart = cart.filter((item) => item.id !== key);
+      const updatedCart = cart.filter((item) => item.productId !== key);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setCart(updatedCart);
       syncCartWithDatabase(updatedCart);
@@ -76,14 +75,13 @@ const Cart = () => {
       cartData.products = cartItems;
       console.log('in submit after change:', cartData);
       const createOrder = await axios.post('/CreateOrder', cartData, {
-        withCredentials: true, // Include credentials (cookies) with the request
-         });
+        withCredentials: true // Include credentials (cookies) with the request
+      });
       if (createOrder) {
         console.log(createOrder);
         toast.success('Your Order placed successfully!!');
         localStorage.setItem('cart', '[]');
-        const createdCart = await axios.post('/CreateCart', cartData,
-        {
+        const createdCart = await axios.post('/CreateCart', cartData, {
           withCredentials: true
         });
         if (createdCart) {
@@ -124,12 +122,12 @@ const Cart = () => {
             <div className="max-h-[90vh] overflow-y-auto scrollbar">
               {cartItems.map((item) => (
                 <CartItemDetail
-                  key={item.id}
-                  id={item.id}
-                  imageSrc={item.imageUrl}
-                  title={item.title}
+                  key={item.productId}
+                  id={item.productId}
+                  imageSrc={item.productImgPath}
+                  title={item.productName}
                   description={item.description}
-                  actualQuantity={item.actualQuantity || ' '}
+                  actualQuantity={item.actualQuantity || 1}
                   price="259.000 ₭"
                   onDelete={handleDelete}
                   updateItemQuantity={updateItemQuantity} // Pass the updateItemQuantity function
@@ -161,7 +159,6 @@ const CartItemDetail = ({ id, imageSrc, title, description, actualQuantity, onDe
     setProductQuantity(newQuantity);
     updateItemQuantity(id, newQuantity); // Update the quantity in the cart
   };
-
   const handleDecrement = () => {
     if (productQuantity > 1) {
       const newQuantity = productQuantity - 1;
@@ -211,7 +208,7 @@ const CartItemDetail = ({ id, imageSrc, title, description, actualQuantity, onDe
             <input
               className="h-7 w-16 border bg-white text-center text-xs outline-none"
               type="text"
-              value={productQuantity || ' '}
+              value={productQuantity}
               onInput={handleQuantityChange}
             />
             <button
@@ -241,7 +238,7 @@ const SubTotal = ({ cartItems, handleSubmit, orderName }) => {
       <div>
         {cartItems.map((item, index) => (
           <div key={index} className="flex justify-between">
-            <p className="text-md font-normal">{item.title}</p>
+            <p className="text-md font-normal">{item.productName}</p>
             <p className="text-md font-normal">{item?.actualQuantity}</p>
           </div>
         ))}
