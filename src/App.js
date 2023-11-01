@@ -31,10 +31,13 @@ const App = () => {
   axios.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response.status === 401) {
-        console.log('Redirecting to login');
-        navigate('/login');
+     if (error.response.status === 401) {
+        if (window.location.pathname !== '/register') {
+          console.log('Redirecting to login');
+          navigate('/login');
+        }
       }
+
 
       return Promise.reject(error);
     }
