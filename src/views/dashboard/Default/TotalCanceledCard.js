@@ -61,9 +61,12 @@ const TotalCanceledCard = ({ isLoading }) => {
   // };
 
   const getCancledOrders = async () => {
-    const CanceledOrders = await axios.get('/GetOrders?Status=canceled&cartId=123456', {
-      withCredentials: true, // Include credentials (cookies) with the request
-       });
+    const GetCartId = await axios.get('/GetCartId');
+    console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
+    const CanceledOrders = await axios.get(`/GetOrders?Status=canceled&cartId=${cartId}`, {
+      withCredentials: true // Include credentials (cookies) with the request
+    });
     if (CanceledOrders) {
       // console.log(CanceledOrders.data.existedOrders.length);
       setOrderCount(CanceledOrders.data.existedOrders.length);

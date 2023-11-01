@@ -80,12 +80,16 @@ export default function PendingOrders() {
   const [USERLIST, setUserlist] = useState([]);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedUserData, setEditedUserData] = useState([]);
+  // const [cartId, setCartId] = useState(0);
 
-  const fetchCustomers = () => {
+  const fetchCustomers = async () => {
+    const GetCartId = await axios.get('/GetCartId');
+    console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=pending`,{
-          withCredentials: true, // Include credentials (cookies) with the request
+        .get(`/GetOrders?cartId=${cartId}&Status=pending`, {
+          withCredentials: true // Include credentials (cookies) with the request
         })
         .then((response) => {
           const orderData = response.data.existedOrders;
@@ -125,8 +129,8 @@ export default function PendingOrders() {
   const handleSubmit = async (values) => {
     // console.log(editedUserData);
     console.log('values', values);
-    const updatedCustomer = await axios.post('/updateClient', values,{
-      withCredentials: true, // Include credentials (cookies) with the request
+    const updatedCustomer = await axios.post('/updateClient', values, {
+      withCredentials: true // Include credentials (cookies) with the request
     });
     console.log(updatedCustomer);
     toast.success('Customer updated successfully!!');
@@ -179,8 +183,8 @@ export default function PendingOrders() {
       console.log(user);
       const isDelete = window.confirm('Are you sure you want to delete Order having name ' + user.title);
       if (isDelete) {
-        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`,{
-          withCredentials: true, // Include credentials (cookies) with the request
+        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`, {
+          withCredentials: true // Include credentials (cookies) with the request
         });
         if (deletedCustomer) {
           toast.success('Order deleted successfully!!');

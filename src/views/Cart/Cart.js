@@ -65,11 +65,14 @@ const Cart = () => {
 
   const handleSubmit = async () => {
     try {
+      const GetCartId = await axios.get('/GetCartId');
+      console.log(GetCartId.data.cartId);
+      const cartId = GetCartId.data.cartId;
       let cartData = {};
       console.log('in submit:', { cartItems });
       // let allCookies = document.cookie;
       // console.log(allCookies);
-      cartData.cartId = 123456;
+      cartData.cartId = cartId;
       cartData.orderId = generateRandom6DigitNumber();
       cartData.title = orderName;
       cartData.products = cartItems;

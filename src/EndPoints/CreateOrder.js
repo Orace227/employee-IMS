@@ -17,23 +17,37 @@ function deepEqual(a, b) {
 
 export const syncCartWithDatabase = async (cart) => {
   try {
-    const getOrders = await axios.get(`/GetCarts?cartId=123456`);
-    const existedOrder = getOrders.data.existedOrder[0].Products;
-    // console.log({ cart, existedOrder });
-    // Compare the existedOrder and cart
-    // console.log(!deepEqual(existedOrder, cart));
-    if (!deepEqual(existedOrder, cart)) {
-      console.log('Cart has changed. Making a request to CreateOrders.');
+    const GetCartId = await axios.get('/GetCartId');
+    console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
+    const getOrders = await axios.get(`/GetCarts?cartId=${cartId}`);
+    console.log(getOrders.data);
+    if (getOrders.data.existedOrder.length > 0) {
+      const existedOrder = getOrders.data.existedOrder[0].Products;
 
-      // Create and send the request
-      let cartData = { cartId: 123456 };
+      console.log(!deepEqual(existedOrder, cart));
+      if (!deepEqual(existedOrder, cart)) {
+        console.log('Cart has changed. Making a request to CreateOrders.');
+
+        // Create and send the request
+        let cartData = { cartId: cartId };
+        cartData.Products = cart;
+        const createOrder = await axios.post('/CreateCart', cartData);
+        if (createOrder) {
+          console.log(createOrder);
+        }
+      } else {
+        console.log('Cart has not changed. Making a request to CreateOrders.');
+      }
+    } else {
+      let cartData = { cartId: cartId };
       cartData.Products = cart;
       const createOrder = await axios.post('/CreateCart', cartData);
       if (createOrder) {
         console.log(createOrder);
+      } else {
+        console.log('Cart has not changed. Making a request to CreateOrders.');
       }
-    } else {
-      console.log('Cart has not changed. Making a request to CreateOrders.');
     }
   } catch (err) {
     console.log(err);

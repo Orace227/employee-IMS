@@ -71,11 +71,14 @@ export default function ConfirmedOrders() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [USERLIST, setUserlist] = useState([]);
 
-  const fetchCustomers = () => {
+  const fetchCustomers = async () => {
+    const GetCartId = await axios.get('/GetCartId');
+    // console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=approved`,{
-          withCredentials: true, // Include credentials (cookies) with the request
+        .get(`/GetOrders?cartId=${cartId}&Status=attended`, {
+          withCredentials: true // Include credentials (cookies) with the request
         })
         .then((response) => {
           const orderData = response.data.existedOrders;
@@ -115,7 +118,7 @@ export default function ConfirmedOrders() {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       // If the checkbox is checked, select all items
-      const newSelecteds = USERLIST.map((n) => n.clientId);
+      const newSelecteds = USERLIST.map((n) => n.orderId);
       setSelected(newSelecteds);
     } else {
       // If the checkbox is unchecked, clear the selection
@@ -144,7 +147,7 @@ export default function ConfirmedOrders() {
       const isDelete = window.confirm('Are you sure you want to delete Order having name ' + user.title);
       if (isDelete) {
         const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`, {
-          withCredentials: true, // Include credentials (cookies) with the request
+          withCredentials: true // Include credentials (cookies) with the request
         });
         if (deletedCustomer) {
           toast.success('Order deleted successfully!!');
@@ -167,7 +170,7 @@ export default function ConfirmedOrders() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} mt={1}>
           <Typography variant="h1" gutterBottom>
-            Confirmed Orders
+            Attended Orders
           </Typography>
         </Stack>
         <Toaster />
@@ -218,6 +221,8 @@ export default function ConfirmedOrders() {
                                     ? 'bg-green-200'
                                     : Status === 'canceled'
                                     ? 'bg-red-200'
+                                    : Status === 'attended'
+                                    ? 'bg-blue-200'
                                     : ''
                                 }`}
                               >
