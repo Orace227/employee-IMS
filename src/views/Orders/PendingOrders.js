@@ -12,14 +12,7 @@ import {
   Typography,
   IconButton,
   TableContainer,
-  TablePagination,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  // DialogActions,
-  TextField,
-  Grid
+  TablePagination
 } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
@@ -27,8 +20,6 @@ import Scrollbar from '../../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 import { useEffect } from 'react';
 import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
@@ -78,14 +69,16 @@ export default function PendingOrders() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [USERLIST, setUserlist] = useState([]);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [editedUserData, setEditedUserData] = useState([]);
+  // const [cartId, setCartId] = useState(0);
 
-  const fetchCustomers = () => {
+  const fetchCustomers = async () => {
+    const GetCartId = await axios.get('/GetCartId');
+    console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
     const promise = new Promise((resolve, reject) => {
       axios
-        .get(`/GetOrders?cartId=123456&Status=pending`,{
-          withCredentials: true, // Include credentials (cookies) with the request
+        .get(`/GetOrders?cartId=${cartId}&Status=pending`, {
+          withCredentials: true // Include credentials (cookies) with the request
         })
         .then((response) => {
           const orderData = response.data.existedOrders;
@@ -106,32 +99,6 @@ export default function PendingOrders() {
       success: 'Pending Orders fetched successfully!!',
       error: 'Failed to fetch Pending Orders!!!'
     });
-  };
-  const handleOpenEditModal = (row) => {
-    try {
-      console.log(row);
-      const user = USERLIST.find((user) => user.clientId == row.clientId);
-      console.log(user);
-      setEditedUserData(user);
-      setOpenEditModal(true);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-  // Function to close the edit modal
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false);
-  };
-  const handleSubmit = async (values) => {
-    // console.log(editedUserData);
-    console.log('values', values);
-    const updatedCustomer = await axios.post('/updateClient', values,{
-      withCredentials: true, // Include credentials (cookies) with the request
-    });
-    console.log(updatedCustomer);
-    toast.success('Customer updated successfully!!');
-    handleSaveChanges();
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -179,8 +146,8 @@ export default function PendingOrders() {
       console.log(user);
       const isDelete = window.confirm('Are you sure you want to delete Order having name ' + user.title);
       if (isDelete) {
-        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`,{
-          withCredentials: true, // Include credentials (cookies) with the request
+        const deletedCustomer = await axios.post(`/DeleteOrder?cartId=${row.cartId}&orderId=${row.orderId}`, {
+          withCredentials: true // Include credentials (cookies) with the request
         });
         if (deletedCustomer) {
           toast.success('Order deleted successfully!!');
@@ -197,9 +164,6 @@ export default function PendingOrders() {
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('First Name is Required')
-  });
 
   return (
     <>
@@ -210,50 +174,7 @@ export default function PendingOrders() {
           </Typography>
         </Stack>
         <Toaster />
-        {openEditModal && (
-          <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="lg" fullWidth>
-            <DialogTitle>Edit Product</DialogTitle>
-            <DialogContent>
-              <Container>
-                <Formik initialValues={editedUserData} validationSchema={validationSchema} onSubmit={handleSubmit}>
-                  {() => (
-                    <>
-                      {console.log(editedUserData)}
-                      <Form>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} sm={6}>
-                            <Field name="title" as={TextField} label="Title" fullWidth margin="normal" variant="outlined" />
-                            <ErrorMessage name="title" component="div" className="error" style={{ color: 'red' }} />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <Field
-                              name="Status"
-                              as={TextField}
-                              className={`${editedUserData.Status === 'pending' ? ' border-yellow-500' : 'text-yellow-500'}`}
-                              label="Status"
-                              fullWidth
-                              margin="normal"
-                              variant="outlined"
-                              disabled
-                            />
-                            <ErrorMessage name="Status" component="div" className="error" style={{ color: 'red' }} />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <Field name="createdAt" as={TextField} label="Date" fullWidth margin="normal" variant="outlined" disabled />
-                            <ErrorMessage name="createdAt" component="div" className="error" style={{ color: 'red' }} />
-                          </Grid>
-                        </Grid>
-                        <Button type="submit" color="primary" size="large" style={{ marginTop: '1rem' }}>
-                          Save
-                        </Button>
-                      </Form>
-                    </>
-                  )}
-                </Formik>
-              </Container>
-            </DialogContent>
-          </Dialog>
-        )}
+
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} placeholder="History" />
 
@@ -307,9 +228,6 @@ export default function PendingOrders() {
                               </div>
                             </TableCell>
                             <TableCell align="left">
-                              <IconButton size="large" color="inherit" onClick={() => handleOpenEditModal(row)}>
-                                <Iconify icon={'eva:edit-fill'} />
-                              </IconButton>
                               <IconButton
                                 size="large"
                                 color="inherit"

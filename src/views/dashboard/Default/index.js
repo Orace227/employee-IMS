@@ -21,9 +21,12 @@ const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
   const handleNotification = async () => {
     try {
-      const Notification = await axios.get('/GetOrders?EmployeeNotification=true&cartId=123456', {
-    withCredentials: true, // Include credentials (cookies) with the request
-     });
+      const GetCartId = await axios.get('/GetCartId');
+      console.log(GetCartId.data.cartId);
+      const cartId = GetCartId.data.cartId;
+      const Notification = await axios.get(`/GetOrders?EmployeeNotification=true&cartId=${cartId}`, {
+        withCredentials: true // Include credentials (cookies) with the request
+      });
       console.log(Notification.data.existedOrders);
       const NotificationArr = Notification.data.existedOrders;
       NotificationArr.forEach((element) => {
@@ -40,15 +43,12 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/ConfirmedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/OrderHistory?receivedOrderId=${receivedOrderId}`);
             }
           });
         }
         if (element.Status === 'attended') {
-          toast.info(Message, {
+          toast.warn(Message, {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -58,14 +58,12 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/ConfirmedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
             }
           });
         }
-        if (element.Status === 'pending') {
+
+        if (element.Status === 'canceled') {
           toast.error(Message, {
             position: 'top-right',
             autoClose: 5000,
@@ -76,17 +74,14 @@ const Dashboard = () => {
             progress: undefined,
             theme: 'light',
             onClick: () => {
-              // Handle the click event
-              if (element.Status === 'approved') navigate(`/ConfirmedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'attended') navigate(`/attendedOrders?receivedOrderId=${receivedOrderId}`);
-              if (element.Status === 'pending') navigate(`/PendingOrders?receivedOrderId=${receivedOrderId}`);
+              navigate(`/OrderHistory?receivedOrderId=${receivedOrderId}`);
             }
           });
         }
         element.EmployeeNotification = false;
         const offNotification = axios.post('/UpdateOrder', element, {
-            withCredentials: true, // Include credentials (cookies) with the request
-             });
+          withCredentials: true // Include credentials (cookies) with the request
+        });
         if (offNotification) {
           console.log(offNotification);
         }

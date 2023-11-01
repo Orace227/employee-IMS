@@ -61,9 +61,12 @@ const TotalAttendedCard = ({ isLoading }) => {
   // };
 
   const getCancledOrders = async () => {
-    const AttendedOrders = await axios.get('/GetOrders?Status=attended&cartId=123456', {
-      withCredentials: true, // Include credentials (cookies) with the request
-       });
+    const GetCartId = await axios.get('/GetCartId');
+    console.log(GetCartId.data.cartId);
+    const cartId = GetCartId.data.cartId;
+    const AttendedOrders = await axios.get(`/GetOrders?Status=attended&cartId=${cartId}`, {
+      withCredentials: true // Include credentials (cookies) with the request
+    });
     if (AttendedOrders) {
       // console.log(CanceledOrders.data.existedOrders.length);
       setOrderCount(AttendedOrders.data.existedOrders.length);
