@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import axios from 'axios';
 
@@ -54,8 +53,6 @@ const FirebaseRegister = () => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   // const [checked, setChecked] = useState(true);
-  const [strength, setStrength] = useState(0);
-  const [level, setLevel] = useState();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
@@ -69,14 +66,8 @@ const FirebaseRegister = () => {
     event.preventDefault();
   };
 
-  const changePassword = (value) => {
-    const temp = strengthIndicator(value);
-    setStrength(temp);
-    setLevel(strengthColor(temp));
-  };
 
   useEffect(() => {
-    changePassword('123456');
   }, []);
 
   const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
@@ -100,7 +91,6 @@ const FirebaseRegister = () => {
     }
   };
   useEffect(() => {
-    changePassword('123456');
   }, []);
   return (
     <>
@@ -192,22 +182,7 @@ const FirebaseRegister = () => {
             </Grid>
           </Grid>
 
-          {strength !== 0 && (
-            <FormControl fullWidth>
-              <Box sx={{ mb: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item>
-                    <Box style={{ backgroundColor: level?.color }} sx={{ width: 85, height: 8, borderRadius: '7px' }} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1" fontSize="0.75rem">
-                      {level?.label}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            </FormControl>
-          )}
+          
 
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
