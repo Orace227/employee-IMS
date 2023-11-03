@@ -15,10 +15,21 @@ import AttendedOrders from 'views/Orders/AttendedOrders';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Customers = Loadable(lazy(() => import('views/Products/Customers'))); 
-
+import Cookies from 'js-cookie';
 // sample page routing
-
+import { Navigate } from 'react-router';
 // ==============================|| MAIN ROUTING ||============================== //
+
+const auth = Cookies.get('Authtoken');
+
+// Define a function to render DashboardDefault or a redirect
+function renderDashboardRoute() {
+  if (auth) {
+    return <DashboardDefault />;
+  } else {
+    return <Navigate to="/login" />;
+  }
+}
 
 const MainRoutes = {
   path: '/',
@@ -26,11 +37,11 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
+      element: renderDashboardRoute()
     },
     {
       path: 'dashboard',
-      element: <DashboardDefault />
+      element: renderDashboardRoute()
     },
     {
       path: '/Products',
