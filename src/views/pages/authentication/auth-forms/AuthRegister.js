@@ -41,6 +41,7 @@ const validationSchema = Yup.object().shape({
 
 const initialValues = {
   username: '',
+  fullName: '',
   dept: '',
   designation: '',
   mNumber: '',
@@ -53,11 +54,8 @@ const initialValues = {
 const FirebaseRegister = () => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-  // const [checked, setChecked] = useState(true);
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
-
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -96,7 +94,6 @@ const FirebaseRegister = () => {
   return (
     <>
   
-      
       {registrationSuccess && (
         // <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         //   <Card sx={{
@@ -125,6 +122,9 @@ const FirebaseRegister = () => {
             <Grid item xs={12}>
               <Field as={TextField} fullWidth label="Username" margin="normal" name="username" type="text" />
               <ErrorMessage name="username" component={FormHelperText} error />
+            </Grid>
+            <Grid item xs={12}>
+              <Field as={TextField} fullWidth label="Name" margin="normal" name="fullName" type="text" />
             </Grid>
             <Grid item xs={12}>
               <Field as={TextField} fullWidth label="Department" margin="normal" name="dept" type="text" />
