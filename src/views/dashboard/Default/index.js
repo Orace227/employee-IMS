@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 // project imports
-import PopularCard from './PopularCard';
-import TotalGrowthBarChart from './TotalGrowthBarChart';
+// import PopularCard from './PopularCard';
+// import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 // import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -116,7 +116,7 @@ const Dashboard = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12} md={8}>
               <TotalGrowthBarChart isLoading={isLoading} />
@@ -125,7 +125,7 @@ const Dashboard = () => {
               <PopularCard isLoading={isLoading} />
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );
