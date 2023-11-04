@@ -5,9 +5,9 @@ import { Formik, Form, ErrorMessage, Field } from 'formik';
 import {
   Box,
   Button,
-  CardContent,
+  // CardContent,
   Checkbox,
-  Card, 
+  // Card, 
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -15,7 +15,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
-  Typography,
+  // Typography,
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -23,6 +23,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('Username is required').trim(),
@@ -96,26 +97,27 @@ const FirebaseRegister = () => {
     <>
   
       {registrationSuccess && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <Card sx={{
-            width: '500px ',
-            height: '300px',
-            borderRadius: 4,
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
-          }}>
-            <CardContent>
-              <Typography variant="h5" align="center">
-                Your request has been sent to the branch manager.
-              </Typography>
-              <Typography variant="subtitle1" align="center">
-                You will receive an email when your request is approved.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
+        // <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        //   <Card sx={{
+        //     width: '500px ',
+        //     height: '300px',
+        //     borderRadius: 4,
+        //     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
+        //   }}>
+        //     <CardContent>
+        //       <Typography variant="h5" align="center">
+        //         Your request has been sent to the branch manager.
+        //       </Typography>
+        //       <Typography variant="subtitle1" align="center">
+        //         You will receive an email when your request is approved.
+        //       </Typography>
+        //     </CardContent>
+        //   </Card>
+        // </Box>
+        toast.success("Your request has been sent to the branch manager.")
       )}
-
-
+      
+<Toaster/>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form noValidate>
           <Grid container spacing={matchDownSM ? 0 : 2}>
@@ -205,5 +207,6 @@ const FirebaseRegister = () => {
     </>
   );
 };
+      
 
 export default FirebaseRegister;
