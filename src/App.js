@@ -42,8 +42,10 @@ const App = () => {
   );
   const auth = Cookies.get('Authtoken');
 
-  if (auth && (window.location.pathname === '/login' || window.location.pathname === '/register')) {
-    navigate('/dashboard'); 
+  if (!auth) {
+    if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+      navigate('/login'); // Redirect to the login page for unauthenticated users.
+    }
   }
 
   return (

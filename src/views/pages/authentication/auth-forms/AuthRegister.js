@@ -47,7 +47,9 @@ const initialValues = {
   email: '',
   password: '',
   confirmPass: '',
-  submit: null
+  submit: null,
+  panel: "Employee", // Add the panel information here
+
 };
 
 const FirebaseRegister = () => {
